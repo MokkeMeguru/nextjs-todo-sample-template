@@ -18,7 +18,7 @@ export const NewTodoDialog: FC<NewTodoDialogProps> = ({
   open,
   handleClose,
 }) => {
-  const [newTask, setNetTask] = useState("");
+  const [newTask, setNewTask] = useState("");
   const addTodoCallback = useAddTodo();
 
   return (
@@ -30,7 +30,7 @@ export const NewTodoDialog: FC<NewTodoDialogProps> = ({
           label="text"
           fullWidth
           value={newTask}
-          onChange={(event) => setNetTask(event.target.value)}
+          onChange={(event) => setNewTask(event.target.value)}
         />
       </DialogContent>
 

@@ -8,7 +8,7 @@ export type Todo = {
 };
 
 type TodoState = {
-  todoids: string[];
+  todoIds: string[];
   entities: {
     [id: string]: Todo;
   };
@@ -20,8 +20,9 @@ const initialTodos = [
   { id: uuidv4(), text: "todo1", completed: false },
   { id: uuidv4(), text: "todo2", completed: false },
 ] as const;
+
 export const todoInitialState: TodoState = {
-  todoids: initialTodos.map((todo) => todo.id),
+  todoIds: initialTodos.map((todo) => todo.id),
   entities: {
     [initialTodos[0].id]: initialTodos[0],
     [initialTodos[1].id]: initialTodos[1],
@@ -33,17 +34,30 @@ const todoSlice = createSlice({
   name: "todo",
   initialState: todoInitialState,
   reducers: {
-    addTodo: (state, action: PayloadAction<Todo>) => {
+    upsertTodo: (state, action: PayloadAction<Todo>) => {
       const todo = action.payload;
       return {
         ...state,
-        todoIds: [...state.todoids, todo.id],
-        entities: { ...state.entities, [todo.id]: todo },
+        todoIds: [...state.todoIds, todo.id],
+        entities: {
+          ...state.entities,
+          [todo.id]: todo,
+        },
         // todos: [...state.todos, action.payload],
+      };
+    },
+    editTodo: (state, action: PayloadAction<Todo>) => {
+      const todo = action.payload;
+      return {
+        ...state,
+        entities: {
+          ...state.entities,
+          [todo.id]: todo,
+        },
       };
     },
   },
 });
 
-export const { addTodo } = todoSlice.actions;
+export const { upsertTodo, editTodo } = todoSlice.actions;
 export const todoReducer = todoSlice.reducer;

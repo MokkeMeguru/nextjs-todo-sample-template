@@ -11,13 +11,28 @@ import {
 import DeleteIcon from "@material-ui/icons/Delete";
 import EditIcon from "@material-ui/icons/Edit";
 import { NextPage } from "next";
-import { useState } from "react";
+import { useState, useMemo } from "react";
+import { useSelector } from "react-redux";
 import { NewTodoDialog } from "../components/NewTodoDialog";
+import { EditTodoDialog } from "../components/EditTodoDialog";
 import { useTodos, useAddTodo } from "../modules/todoHooks";
+import { RootState } from "../state";
+import { addTodo, Todo } from "./todoSlice";
 
 const TodosPage: NextPage<{}> = () => {
-  const [todos] = useTodos();
+  const todoIds = useSelector((state: RootState) => state.todo.todoIds);
+  const entities = useSelector((state: RootState) => state.todo.entities);
+
+  const todos = useMemo(() => {
+    return todoIds
+      .map((id) => {
+        return entities[id];
+      })
+      .filter((todo): todo is Todo => !!todo);
+  }, [entities, todoIds]);
+
   const [open, setOpen] = useState(false);
+  const [editId, setEditId] = useState("");
 
   return (
     <div>
@@ -40,7 +55,7 @@ const TodosPage: NextPage<{}> = () => {
               </ListItemIcon>
               <ListItemText primary={todo.text} />
               <ListItemSecondaryAction>
-                <IconButton onClick={() => alert("未実装")}>
+                <IconButton onClick={() => setEditId(todo.id)}>
                   <EditIcon />
                 </IconButton>
                 <IconButton onClick={() => alert("未実装")}>
@@ -52,6 +67,13 @@ const TodosPage: NextPage<{}> = () => {
         </List>
       </div>
 
+      <EditTodoDialog
+        todo={editId === "" ? null : entities[editId]}
+        todoText={editId === "" ? "" : entities[editId].text}
+        handleClose={() => {
+          setEditId("");
+        }}
+      />
       <NewTodoDialog
         open={open}
         handleClose={() => {
