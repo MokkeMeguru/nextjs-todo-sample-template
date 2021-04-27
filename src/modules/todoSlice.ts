@@ -8,15 +8,25 @@ export type Todo = {
 };
 
 type TodoState = {
-  todos: Todo[];
+  todoids: string[];
+  entities: {
+    [id: string]: Todo;
+  };
 };
-
+// todos: Todo[];
+//
+const initialTodos = [
+  { id: uuidv4(), text: "todo0", completed: false },
+  { id: uuidv4(), text: "todo1", completed: false },
+  { id: uuidv4(), text: "todo2", completed: false },
+] as const;
 export const todoInitialState: TodoState = {
-  todos: [
-    { id: uuidv4(), text: "todo0", completed: false },
-    { id: uuidv4(), text: "todo1", completed: false },
-    { id: uuidv4(), text: "todo2", completed: false },
-  ],
+  todoids: initialTodos.map((todo) => todo.id),
+  entities: {
+    [initialTodos[0].id]: initialTodos[0],
+    [initialTodos[1].id]: initialTodos[1],
+    [initialTodos[2].id]: initialTodos[2],
+  },
 };
 
 const todoSlice = createSlice({
@@ -24,9 +34,12 @@ const todoSlice = createSlice({
   initialState: todoInitialState,
   reducers: {
     addTodo: (state, action: PayloadAction<Todo>) => {
+      const todo = action.payload;
       return {
         ...state,
-        todos: [...state.todos, action.payload],
+        todoIds: [...state.todoids, todo.id],
+        entities: { ...state.entities, [todo.id]: todo },
+        // todos: [...state.todos, action.payload],
       };
     },
   },
