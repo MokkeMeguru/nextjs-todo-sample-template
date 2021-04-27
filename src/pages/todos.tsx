@@ -11,11 +11,13 @@ import {
 import DeleteIcon from "@material-ui/icons/Delete";
 import EditIcon from "@material-ui/icons/Edit";
 import { NextPage } from "next";
+import { useState } from "react";
 import { NewTodoDialog } from "../components/NewTodoDialog";
-import { useTodos } from "../modules/todoHooks";
+import { useTodos, useAddTodo } from "../modules/todoHooks";
 
 const TodosPage: NextPage<{}> = () => {
   const [todos] = useTodos();
+  const [open, setOpen] = useState(false);
 
   return (
     <div>
@@ -24,9 +26,7 @@ const TodosPage: NextPage<{}> = () => {
         <Button
           variant="contained"
           color="primary"
-          onClick={() => {
-            alert("未実装");
-          }}
+          onClick={() => setOpen(true)}
         >
           新規作成
         </Button>
@@ -52,7 +52,12 @@ const TodosPage: NextPage<{}> = () => {
         </List>
       </div>
 
-      <NewTodoDialog open={false} handleClose={() => {}} />
+      <NewTodoDialog
+        open={open}
+        handleClose={() => {
+          setOpen(false);
+        }}
+      />
     </div>
   );
 };
