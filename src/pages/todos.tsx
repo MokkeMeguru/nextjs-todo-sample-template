@@ -69,7 +69,6 @@ const TodosPage: NextPage<{}> = () => {
 
       <EditTodoDialog
         todo={editId === "" ? null : entities[editId]}
-        todoText={editId === "" ? "" : entities[editId].text}
         handleClose={() => {
           setEditId("");
         }}

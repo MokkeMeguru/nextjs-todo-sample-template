@@ -17,7 +17,6 @@ type EditTodoDialogProps = {
 
 export const EditTodoDialog: FC<EditTodoDialogProps> = ({
   todo,
-  todoText,
   handleClose,
 }) => {
   const open = todo !== null;
