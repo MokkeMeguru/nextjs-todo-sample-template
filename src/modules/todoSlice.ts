@@ -34,7 +34,7 @@ const todoSlice = createSlice({
   name: "todo",
   initialState: todoInitialState,
   reducers: {
-    upsertTodo: (state, action: PayloadAction<Todo>) => {
+    addTodo: (state, action: PayloadAction<Todo>) => {
       const todo = action.payload;
       return {
         ...state,
@@ -56,8 +56,23 @@ const todoSlice = createSlice({
         },
       };
     },
+    removeTodo: (state, action: PayloadAction<Todo>) => {
+      const todo = action.payload;
+      const newTodoIds = [...state.todoIds];
+      var newEntities: { [id: string]: Todo } = {};
+      for (var idx in state.entities) {
+        if (idx !== todo.id) {
+          newEntities[idx] = state.entities[idx]!;
+        }
+      }
+      return {
+        ...state,
+        todoIds: newTodoIds.filter((t) => t !== todo.id),
+        entities: newEntities,
+      };
+    },
   },
 });
 
-export const { upsertTodo, editTodo } = todoSlice.actions;
+export const { removeTodo, addTodo, editTodo } = todoSlice.actions;
 export const todoReducer = todoSlice.reducer;

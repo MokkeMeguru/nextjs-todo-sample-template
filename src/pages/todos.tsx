@@ -15,7 +15,7 @@ import { useState, useMemo } from "react";
 import { useSelector } from "react-redux";
 import { NewTodoDialog } from "../components/NewTodoDialog";
 import { EditTodoDialog } from "../components/EditTodoDialog";
-import { useTodos, useAddTodo } from "../modules/todoHooks";
+import { useTodos, useAddTodo, useDeleteTodo } from "../modules/todoHooks";
 import { RootState } from "../state";
 import { addTodo, Todo } from "./todoSlice";
 
@@ -33,6 +33,7 @@ const TodosPage: NextPage<{}> = () => {
 
   const [open, setOpen] = useState(false);
   const [editId, setEditId] = useState("");
+  const removeTodo = useDeleteTodo();
 
   return (
     <div>
@@ -58,7 +59,7 @@ const TodosPage: NextPage<{}> = () => {
                 <IconButton onClick={() => setEditId(todo.id)}>
                   <EditIcon />
                 </IconButton>
-                <IconButton onClick={() => alert("未実装")}>
+                <IconButton onClick={() => removeTodo(todo)}>
                   <DeleteIcon />
                 </IconButton>
               </ListItemSecondaryAction>
